@@ -1,6 +1,7 @@
 package com.courses.rhproject.modules.users;
 
 import com.courses.rhproject.modules.applicants.ApplicantEntity;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 

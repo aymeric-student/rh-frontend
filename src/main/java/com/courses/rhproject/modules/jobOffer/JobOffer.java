@@ -40,6 +40,5 @@ public class JobOffer extends BaseEntity {
     private Enterprise enterprise;
 
     @OneToMany(mappedBy = "jobOffer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonManagedReference
     private List<ApplicantEntity> applicantEntities = new ArrayList<>();
 }
