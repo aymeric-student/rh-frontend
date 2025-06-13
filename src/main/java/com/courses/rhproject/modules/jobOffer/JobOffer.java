@@ -3,6 +3,7 @@ package com.courses.rhproject.modules.jobOffer;
 import com.courses.rhproject.core.BaseEntity;
 import com.courses.rhproject.modules.applicants.ApplicantEntity;
 import com.courses.rhproject.modules.enterprises.Enterprise;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
@@ -39,5 +40,6 @@ public class JobOffer extends BaseEntity {
     private Enterprise enterprise;
 
     @OneToMany(mappedBy = "jobOffer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<ApplicantEntity> applicantEntities = new ArrayList<>();
 }

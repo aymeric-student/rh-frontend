@@ -25,15 +25,13 @@ public class ApplicantService {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new BusinessException(UserError.USER_NOT_FOUND));
 
-        Optional<JobOffer> offer = jobOfferRepository.findById(request.jobOfferId());
-
-        if (offer.isEmpty()) {
-            throw new BusinessException(JobOfferError.JOB_OFFER_NOT_FOUND);
-        }
+        JobOffer offer = jobOfferRepository.findById(request.jobOfferId())
+                .orElseThrow(() -> new BusinessException(JobOfferError.JOB_OFFER_NOT_FOUND));
 
         ApplicantEntity applicantEntity = applicantMapper.toEntity(request);
         applicantEntity.setApplicationDate(LocalDate.now());
-
+        applicantEntity.setUser(user);
+        applicantEntity.setJobOffer(offer);
 
         applicantRepository.save(applicantEntity);
         return applicantMapper.toDto(applicantEntity);
