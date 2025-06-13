@@ -44,7 +44,7 @@ public class RestControllerAdvice {
     public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
         ErrorResponse errorResponse = new ErrorResponse(
                 "INTERNAL_ERROR",
-                "Internal server error",
+                "Internal server error: " + ex.getMessage(),
                 500
         );
         return ResponseEntity.status(500).body(errorResponse);

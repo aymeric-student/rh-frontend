@@ -5,6 +5,7 @@ import com.courses.rhproject.modules.jobOffer.dtos.CreateJobOfferRequest;
 import com.courses.rhproject.modules.jobOffer.dtos.JobOfferResponse;
 import com.courses.rhproject.modules.users.User;
 import com.courses.rhproject.modules.users.UserError;
+import com.courses.rhproject.modules.users.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +20,12 @@ public class JobService {
 
     private final JobOfferMapper jobOfferMapper;
     private final JobRepository jobOfferRepository;
+    private final UserRepository userRepository;
 
-    public JobOfferResponse createJobOffer(CreateJobOfferRequest createJobOfferRequest, User recruiter) {
+    public JobOfferResponse createJobOffer(CreateJobOfferRequest createJobOfferRequest, String userEmail) {
+        User recruiter = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new BusinessException(UserError.USER_NOT_FOUND));
+
         if (!recruiter.isRecruiter()) {
             throw new BusinessException(UserError.USER_NEED_TO_BE_RECRUTER);
         }
@@ -42,7 +47,6 @@ public class JobService {
                 .map(jobOfferMapper::toDto)
                 .collect(Collectors.toList());
     }
-
 
     public JobOfferResponse getJobOfferById(UUID id) {
         JobOffer jobOffer = jobOfferRepository.findById(id)

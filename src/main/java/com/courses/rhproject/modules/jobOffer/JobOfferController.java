@@ -1,7 +1,6 @@
 package com.courses.rhproject.modules.jobOffer;
 
 import com.courses.rhproject.modules.jobOffer.dtos.*;
-import com.courses.rhproject.modules.users.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,15 +34,19 @@ public class JobOfferController {
 
     @Operation(summary = "Create a Job Offers", description = "Creates a new job offers entity")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "get all job offers"),
+            @ApiResponse(responseCode = "201", description = "Job offer created"),
             @ApiResponse(responseCode = "400", description = "Invalid request"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden - User must be a recruiter"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PostMapping
     public ResponseEntity<JobOfferResponse> createJobOffer(
             @RequestBody CreateJobOfferRequest request,
-            @AuthenticationPrincipal User user) {
-        JobOfferResponse response = jobService.createJobOffer(request, user);
+            @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal) {
+
+        String email = principal.getUsername();
+        JobOfferResponse response = jobService.createJobOffer(request, email);
         return ResponseEntity.status(201).body(response);
     }
 

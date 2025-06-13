@@ -48,7 +48,7 @@ public class AuthController {
     })
     @GetMapping("/me")
     public ResponseEntity<User> getMe(@AuthenticationPrincipal org.springframework.security.core.userdetails.User principal) {
-        String email = principal.getUsername(); // On récupère l’email depuis UserDetails
+        String email = principal.getUsername();
         User user = authService.getUserByEmail(email);
         return ResponseEntity.ok(user);
     }
