@@ -28,4 +28,19 @@ public class EnterpriseController {
         List<EnterpriseResponse> enterprises = enterpriseService.getAllEnterprises();
         return ResponseEntity.status(201).body(enterprises);
     }
+
+    @Operation(summary = "Create an Enterprise", description = "Creates a enterprise entity")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Enterprise created"),
+            @ApiResponse(responseCode = "400", description = "Invalid request"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @PostMapping
+    public ResponseEntity<EnterpriseResponse> createJobOffer(
+            @RequestBody CreateEnterprise enterprise) {
+
+        EnterpriseResponse response = enterpriseService.createEnterprise(enterprise);
+        return ResponseEntity.status(201).body(response);
+    }
 }

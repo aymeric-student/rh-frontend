@@ -4,6 +4,7 @@ import com.courses.rhproject.modules.jobOffer.ContractType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
 public record CreateJobOfferRequest(
         String title,
@@ -11,5 +12,6 @@ public record CreateJobOfferRequest(
         ContractType contractType,
         BigDecimal salary,
         String location,
-        LocalDate expirationDate) {
+        LocalDate expirationDate,
+        UUID enterpriseId) {
 }

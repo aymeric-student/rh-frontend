@@ -18,7 +18,7 @@ import java.util.UUID;
 @Tag(name = "JobOffer", description = "Endpoints for managing the jobs offers")
 public class JobOfferController {
 
-    private final JobService jobService;
+    private final JobOfferService jobService;
 
     @Operation(summary = "get all jobs offers", description = "get all jobs offers")
     @ApiResponses(value = {

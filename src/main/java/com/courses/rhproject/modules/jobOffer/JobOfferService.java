@@ -1,6 +1,9 @@
 package com.courses.rhproject.modules.jobOffer;
 
 import com.courses.rhproject.core.errors.BusinessException;
+import com.courses.rhproject.modules.enterprises.Enterprise;
+import com.courses.rhproject.modules.enterprises.EnterpriseRepository;
+import com.courses.rhproject.modules.enterprises.EnterprisesErrors;
 import com.courses.rhproject.modules.jobOffer.dtos.CreateJobOfferRequest;
 import com.courses.rhproject.modules.jobOffer.dtos.JobOfferResponse;
 import com.courses.rhproject.modules.users.User;
@@ -16,11 +19,12 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class JobService {
+public class JobOfferService {
 
     private final JobOfferMapper jobOfferMapper;
-    private final JobRepository jobOfferRepository;
+    private final JobOfferRepository jobOfferRepository;
     private final UserRepository userRepository;
+    private final EnterpriseRepository enterpriseRepository;
 
     public JobOfferResponse createJobOffer(CreateJobOfferRequest createJobOfferRequest, String userEmail) {
         User recruiter = userRepository.findByEmail(userEmail)
@@ -32,6 +36,13 @@ public class JobService {
 
         JobOffer jobOffer = jobOfferMapper.toEntity(createJobOfferRequest);
         jobOffer.setPublicationDate(LocalDate.now());
+
+        if (createJobOfferRequest.enterpriseId() != null) {
+            Enterprise enterprise = enterpriseRepository.findById(createJobOfferRequest.enterpriseId())
+                    .orElseThrow(() -> new BusinessException(EnterprisesErrors.ENTERPRISES_NOT_FOUND));
+            jobOffer.setEnterprise(enterprise);
+        }
+
         jobOfferRepository.save(jobOffer);
         return jobOfferMapper.toDto(jobOffer);
     }
@@ -68,7 +79,6 @@ public class JobService {
         jobOfferRepository.save(jobOffer);
         return jobOfferMapper.toDto(jobOffer);
     }
-
 
     public void deleteJobOffer(UUID id) {
         JobOffer jobOffer = jobOfferRepository.findById(id)
