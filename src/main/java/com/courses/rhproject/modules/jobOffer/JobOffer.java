@@ -1,0 +1,43 @@
+package com.courses.rhproject.modules.jobOffer;
+
+import com.courses.rhproject.core.BaseEntity;
+import com.courses.rhproject.modules.applicants.ApplicantEntity;
+import com.courses.rhproject.modules.enterprises.Enterprise;
+import jakarta.persistence.*;
+import lombok.*;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "job_offer")
+public class JobOffer extends BaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(columnDefinition = "uuid", updatable = false, unique = true)
+    private UUID id;
+
+    private String title;
+    private String description;
+    private BigDecimal salary;
+    private String location;
+    private LocalDate publicationDate;
+    private LocalDate expirationDate;
+
+    @Enumerated(EnumType.STRING)
+    private ContractType contractType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "enterprise_id", nullable = false)
+    private Enterprise enterprise;
+
+    @OneToMany(mappedBy = "jobOffer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ApplicantEntity> applicantEntities = new ArrayList<>();
+}
