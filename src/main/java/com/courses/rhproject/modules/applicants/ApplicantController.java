@@ -5,25 +5,31 @@ import io.swagger.v3.oas.annotations.responses.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/applicants")
+@RequestMapping("/applicants")  // ✅ Corrigé - ajout du préfixe
 @RequiredArgsConstructor
-@Tag(name = "Authentication", description = "Endpoints for application")
+@Tag(name = "Applicants", description = "Endpoints for job applications")
 public class ApplicantController {
 
     private final ApplicantService applicantService;
 
-    @Operation(summary = "Create an applicant", description = "Allows an new applicant" )
+    @Operation(summary = "Create an applicant", description = "Allows creating a new job application")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "applicant successfully created"),
+            @ApiResponse(responseCode = "201", description = "Application successfully created"),
             @ApiResponse(responseCode = "400", description = "Invalid request"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PostMapping
-    public ResponseEntity<ApplicantResponse> register(@RequestBody CreateApplicant request) {
-        ApplicantResponse applicantResponse = applicantService.createApplicant(request);
+    public ResponseEntity<ApplicantResponse> createApplication(
+            @RequestBody CreateApplicant request,
+            @AuthenticationPrincipal User principal) {  // ✅ Ajout de l'utilisateur authentifié
+
+        String userEmail = principal.getUsername();
+        ApplicantResponse applicantResponse = applicantService.createApplicant(request, userEmail);
         return ResponseEntity.status(201).body(applicantResponse);
     }
 }
