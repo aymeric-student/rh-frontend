@@ -3,6 +3,7 @@ package com.courses.rhproject.modules.jobOffer;
 import com.courses.rhproject.core.BaseEntity;
 import com.courses.rhproject.modules.applicants.ApplicantEntity;
 import com.courses.rhproject.modules.enterprises.Enterprise;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -37,6 +38,7 @@ public class JobOffer extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "enterprise_id", nullable = false)
+    @JsonIgnore
     private Enterprise enterprise;
 
     @OneToMany(mappedBy = "jobOffer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

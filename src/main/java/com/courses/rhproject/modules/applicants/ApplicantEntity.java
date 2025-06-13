@@ -19,8 +19,7 @@ import java.util.UUID;
 public class ApplicantEntity {
     @Id
     @GeneratedValue
-    @Column(name = "uui" +
-            "d", updatable = false, unique = true)
+    @Column(name = "uuid", updatable = false, unique = true)
     private UUID applicantId;
 
     @Enumerated(EnumType.STRING)

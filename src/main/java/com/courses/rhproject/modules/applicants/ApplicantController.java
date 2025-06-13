@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/applicants")  // ✅ Corrigé - ajout du préfixe
+@RequestMapping("/applicants")
 @RequiredArgsConstructor
 @Tag(name = "Applicants", description = "Endpoints for job applications")
 public class ApplicantController {
@@ -26,7 +26,7 @@ public class ApplicantController {
     @PostMapping
     public ResponseEntity<ApplicantResponse> createApplication(
             @RequestBody CreateApplicant request,
-            @AuthenticationPrincipal User principal) {  // ✅ Ajout de l'utilisateur authentifié
+            @AuthenticationPrincipal User principal) {
 
         String userEmail = principal.getUsername();
         ApplicantResponse applicantResponse = applicantService.createApplicant(request, userEmail);
