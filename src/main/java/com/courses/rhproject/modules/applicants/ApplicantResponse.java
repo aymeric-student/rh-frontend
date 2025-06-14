@@ -1,7 +1,7 @@
 package com.courses.rhproject.modules.applicants;
 
-import com.courses.rhproject.modules.jobOffer.JobOffer;
-import com.courses.rhproject.modules.users.User;
+import com.courses.rhproject.modules.jobOffer.dtos.JobOfferResponse;
+import com.courses.rhproject.modules.users.UserResponse;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -9,7 +9,7 @@ import java.util.UUID;
 public record ApplicantResponse(
     UUID applicantId,
     ApplicantStatus status,
-    JobOffer jobOffer,
+    JobOfferResponse jobOffer,
     LocalDate applicationDate,
-    User user) {
+    UserResponse user) {
 }

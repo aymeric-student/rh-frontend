@@ -1,6 +1,6 @@
 package com.courses.rhproject.modules.enterprises;
 
-import com.courses.rhproject.modules.jobOffer.JobOffer;
+import com.courses.rhproject.modules.jobOffer.dtos.JobOfferResponse;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,6 +16,6 @@ public record EnterpriseResponse(
         String headquartersLocation,
         Integer numberOfEmployees,
         Integer foundedYear,
-        List<JobOffer> jobOffers
+        List<JobOfferResponse> jobOffers
 ) {
 }

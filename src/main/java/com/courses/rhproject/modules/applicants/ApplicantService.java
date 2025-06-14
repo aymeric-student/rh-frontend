@@ -10,7 +10,7 @@ import com.courses.rhproject.modules.users.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
-import java.util.Optional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -35,5 +35,11 @@ public class ApplicantService {
 
         applicantRepository.save(applicantEntity);
         return applicantMapper.toDto(applicantEntity);
+    }
+
+    public List<ApplicantResponse> getAllApplicants(){
+        return applicantRepository.findAll().stream()
+                .map(applicantMapper::toDto)
+                .toList();
     }
 }

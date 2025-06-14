@@ -9,6 +9,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+
 @RestController
 @RequestMapping("/applicants")
 @RequiredArgsConstructor
@@ -31,5 +34,17 @@ public class ApplicantController {
         String userEmail = principal.getUsername();
         ApplicantResponse applicantResponse = applicantService.createApplicant(request, userEmail);
         return ResponseEntity.status(201).body(applicantResponse);
+    }
+
+    @Operation(summary = "get all applicants", description = "get all applicants")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "get all applicants"),
+            @ApiResponse(responseCode = "400", description = "Invalid request"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping
+    ResponseEntity<List<ApplicantResponse>> getAllJobOffers() {
+        List<ApplicantResponse> applicants = applicantService.getAllApplicants();
+        return ResponseEntity.status(201).body(applicants);
     }
 }

@@ -1,6 +1,7 @@
 package com.courses.rhproject.modules.enterprises;
 
 import com.courses.rhproject.modules.jobOffer.JobOffer;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,5 +33,6 @@ public class Enterprise {
     private Integer foundedYear;
 
     @OneToMany(mappedBy = "enterprise", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = "enterprise-joboffers")
     private List<JobOffer> jobOffers = new ArrayList<>();
 }

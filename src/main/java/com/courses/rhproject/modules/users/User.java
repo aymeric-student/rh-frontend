@@ -2,6 +2,7 @@ package com.courses.rhproject.modules.users;
 
 import com.courses.rhproject.modules.applicants.ApplicantEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,7 +34,7 @@ public class User {
     private RoleType role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonIgnore
+    @JsonManagedReference(value = "user-applicant")
     private List<ApplicantEntity> applications = new ArrayList<>();
 
     public boolean isRecruiter() {
