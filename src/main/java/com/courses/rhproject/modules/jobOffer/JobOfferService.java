@@ -9,6 +9,9 @@ import com.courses.rhproject.modules.jobOffer.dtos.JobOfferResponse;
 import com.courses.rhproject.modules.users.User;
 import com.courses.rhproject.modules.users.UserError;
 import com.courses.rhproject.modules.users.UserRepository;
+import com.courses.rhproject.modules.workflows.WorkflowEntity;
+import com.courses.rhproject.modules.workflows.WorkflowError;
+import com.courses.rhproject.modules.workflows.WorkflowRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +28,7 @@ public class JobOfferService {
     private final JobOfferRepository jobOfferRepository;
     private final UserRepository userRepository;
     private final EnterpriseRepository enterpriseRepository;
+    private final WorkflowRepository workflowRepository;
 
     public JobOfferResponse createJobOffer(CreateJobOfferRequest createJobOfferRequest, String userEmail) {
         User recruiter = userRepository.findByEmail(userEmail)
@@ -43,6 +47,11 @@ public class JobOfferService {
             jobOffer.setEnterprise(enterprise);
         }
 
+        WorkflowEntity workflow = workflowRepository.findById(createJobOfferRequest.workflowId())
+                .orElseThrow(() -> new BusinessException(WorkflowError.WORKFLOW_NOT_FOUND));
+        jobOffer.setWorkflow(workflow);
+
+
         jobOfferRepository.save(jobOffer);
         return jobOfferMapper.toDto(jobOffer);
     }
@@ -57,12 +66,6 @@ public class JobOfferService {
         return jobOffers.stream()
                 .map(jobOfferMapper::toDto)
                 .collect(Collectors.toList());
-    }
-
-    public JobOfferResponse getJobOfferById(UUID id) {
-        JobOffer jobOffer = jobOfferRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(JobOfferError.JOB_OFFER_NOT_FOUND));
-        return jobOfferMapper.toDto(jobOffer);
     }
 
     public JobOfferResponse updateJobOffer(UUID id, CreateJobOfferRequest dto) {

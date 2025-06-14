@@ -1,6 +1,7 @@
 package com.courses.rhproject.modules.jobOffer.dtos;
 
 import com.courses.rhproject.modules.jobOffer.ContractType;
+import com.courses.rhproject.modules.workflows.WorkflowResponse;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,5 +15,7 @@ public record JobOfferResponse (
         BigDecimal salary,
         String location,
         LocalDate publicationDate,
-        LocalDate expirationDate) {
+        LocalDate expirationDate,
+        WorkflowResponse workflows
+) {
 }

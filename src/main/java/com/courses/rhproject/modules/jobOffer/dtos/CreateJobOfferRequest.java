@@ -13,5 +13,6 @@ public record CreateJobOfferRequest(
         BigDecimal salary,
         String location,
         LocalDate expirationDate,
-        UUID enterpriseId) {
+        UUID enterpriseId,
+        UUID workflowId) {
 }
