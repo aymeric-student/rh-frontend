@@ -66,14 +66,17 @@ public class JobOfferService {
 
     @Transactional(readOnly = true)
     public List<JobOfferResponse> getAllJobOffers() {
-        return Optional.of(jobOfferRepository.findAll())
-                .filter(list -> !list.isEmpty())
-                .map(offers -> offers.stream()
-                        .map(jobOfferMapper::toDto)
-                        .toList())
-                .orElseThrow(() -> new BusinessException(JobOfferError.JOB_OFFER_NOT_FOUND));
-    }
 
+        List<JobOffer> jobOffers = jobOfferRepository.findAllWithDetails();
+
+        if (jobOffers.isEmpty()) {
+            throw new BusinessException(JobOfferError.JOB_OFFER_NOT_FOUND);
+        }
+
+        return jobOffers.stream()
+                .map(jobOfferMapper::toDto)
+                .toList();
+    }
     @Transactional
     public JobOfferResponse updateJobOffer(UUID id, CreateJobOfferRequest dto) {
         JobOffer jobOffer = jobOfferRepository.findById(id)
