@@ -14,6 +14,7 @@ import com.courses.rhproject.modules.workflows.WorkflowError;
 import com.courses.rhproject.modules.workflows.WorkflowRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -30,6 +31,7 @@ public class JobOfferService {
     private final EnterpriseRepository enterpriseRepository;
     private final WorkflowRepository workflowRepository;
 
+    @Transactional
     public JobOfferResponse createJobOffer(CreateJobOfferRequest createJobOfferRequest, String userEmail) {
         User recruiter = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new BusinessException(UserError.USER_NOT_FOUND));
@@ -41,7 +43,7 @@ public class JobOfferService {
         JobOffer jobOffer = jobOfferMapper.toEntity(createJobOfferRequest);
         jobOffer.setPublicationDate(LocalDate.now());
 
-        // Lier l’entreprise
+        // Lier l'entreprise
         if (createJobOfferRequest.enterpriseId() != null) {
             Enterprise enterprise = enterpriseRepository.findById(createJobOfferRequest.enterpriseId())
                     .orElseThrow(() -> new BusinessException(EnterprisesErrors.ENTERPRISES_NOT_FOUND));
@@ -55,17 +57,19 @@ public class JobOfferService {
             jobOffer.setWorkflow(workflow);
         }
 
-        // Sauvegarde
+        // Sauvegarde et rechargement avec workflow
         JobOffer saved = jobOfferRepository.save(jobOffer);
 
-        // Reload pour charger le workflow (et ses steps)
+        // ✅ Rechargement avec @EntityGraph pour s'assurer que le workflow est chargé
         JobOffer loaded = jobOfferRepository.findById(saved.getId())
                 .orElseThrow(() -> new BusinessException(JobOfferError.JOB_OFFER_NOT_FOUND));
 
         return jobOfferMapper.toDto(loaded);
     }
 
+    @Transactional(readOnly = true)
     public List<JobOfferResponse> getAllJobOffers() {
+        // ✅ Utilisation de findAll() avec @EntityGraph pour charger les workflows
         List<JobOffer> jobOffers = jobOfferRepository.findAll();
 
         if (jobOffers.isEmpty()) {
@@ -73,7 +77,14 @@ public class JobOfferService {
         }
 
         return jobOffers.stream()
-                .map(jobOfferMapper::toDto)
+                .map(jobOffer -> {
+                    // ✅ Force le chargement du workflow si lazy
+                    if (jobOffer.getWorkflow() != null) {
+                        // Accès aux propriétés pour déclencher le chargement lazy
+                        jobOffer.getWorkflow().getName();
+                    }
+                    return jobOfferMapper.toDto(jobOffer);
+                })
                 .collect(Collectors.toList());
     }
 

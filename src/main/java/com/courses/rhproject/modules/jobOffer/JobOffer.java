@@ -39,7 +39,6 @@ public class JobOffer extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workflow_id")
-    @JsonBackReference
     private WorkflowEntity workflow;
 
     @ManyToOne(fetch = FetchType.LAZY)
