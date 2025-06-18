@@ -16,6 +16,6 @@ public record JobOfferResponse (
         String location,
         LocalDate publicationDate,
         LocalDate expirationDate,
-        WorkflowResponse workflows
+        WorkflowResponse workflow
 ) {
 }

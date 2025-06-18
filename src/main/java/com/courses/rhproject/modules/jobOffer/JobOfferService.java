@@ -41,19 +41,28 @@ public class JobOfferService {
         JobOffer jobOffer = jobOfferMapper.toEntity(createJobOfferRequest);
         jobOffer.setPublicationDate(LocalDate.now());
 
+        // Lier l’entreprise
         if (createJobOfferRequest.enterpriseId() != null) {
             Enterprise enterprise = enterpriseRepository.findById(createJobOfferRequest.enterpriseId())
                     .orElseThrow(() -> new BusinessException(EnterprisesErrors.ENTERPRISES_NOT_FOUND));
             jobOffer.setEnterprise(enterprise);
         }
 
-        WorkflowEntity workflow = workflowRepository.findById(createJobOfferRequest.workflowId())
-                .orElseThrow(() -> new BusinessException(WorkflowError.WORKFLOW_NOT_FOUND));
-        jobOffer.setWorkflow(workflow);
+        // Lier le workflow
+        if (createJobOfferRequest.workflowId() != null) {
+            WorkflowEntity workflow = workflowRepository.findById(createJobOfferRequest.workflowId())
+                    .orElseThrow(() -> new BusinessException(WorkflowError.WORKFLOW_NOT_FOUND));
+            jobOffer.setWorkflow(workflow);
+        }
 
+        // Sauvegarde
+        JobOffer saved = jobOfferRepository.save(jobOffer);
 
-        jobOfferRepository.save(jobOffer);
-        return jobOfferMapper.toDto(jobOffer);
+        // Reload pour charger le workflow (et ses steps)
+        JobOffer loaded = jobOfferRepository.findById(saved.getId())
+                .orElseThrow(() -> new BusinessException(JobOfferError.JOB_OFFER_NOT_FOUND));
+
+        return jobOfferMapper.toDto(loaded);
     }
 
     public List<JobOfferResponse> getAllJobOffers() {
@@ -67,6 +76,7 @@ public class JobOfferService {
                 .map(jobOfferMapper::toDto)
                 .collect(Collectors.toList());
     }
+
 
     public JobOfferResponse updateJobOffer(UUID id, CreateJobOfferRequest dto) {
         JobOffer jobOffer = jobOfferRepository.findById(id)
