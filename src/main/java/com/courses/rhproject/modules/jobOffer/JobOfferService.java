@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -46,88 +47,31 @@ public class JobOfferService {
         jobOffer.setPublicationDate(LocalDate.now());
 
         // Lier l'entreprise
-        if (createJobOfferRequest.enterpriseId() != null) {
-            Enterprise enterprise = enterpriseRepository.findById(createJobOfferRequest.enterpriseId())
-                    .orElseThrow(() -> new BusinessException(EnterprisesErrors.ENTERPRISES_NOT_FOUND));
-            jobOffer.setEnterprise(enterprise);
-            log.info("✅ Enterprise linked: {}", enterprise.getName());
-        }
+        Enterprise enterprise = enterpriseRepository.findById(createJobOfferRequest.enterpriseId())
+                .orElseThrow(() -> new BusinessException(EnterprisesErrors.ENTERPRISES_NOT_FOUND));
+        jobOffer.setEnterprise(enterprise);
 
         // Lier le workflow
-        if (createJobOfferRequest.workflowId() != null) {
-            WorkflowEntity workflow = workflowRepository.findById(createJobOfferRequest.workflowId())
-                    .orElseThrow(() -> new BusinessException(WorkflowError.WORKFLOW_NOT_FOUND));
-            jobOffer.setWorkflow(workflow);
-            log.info("✅ Workflow linked: {} (ID: {})", workflow.getName(), workflow.getWorkflowId());
-        } else {
-            log.warn("⚠️ No workflow ID provided in request");
-        }
+        WorkflowEntity workflow = workflowRepository.findById(createJobOfferRequest.workflowId())
+                .orElseThrow(() -> new BusinessException(WorkflowError.WORKFLOW_NOT_FOUND));
+
+        jobOffer.setWorkflow(workflow);
 
         // Sauvegarde
         JobOffer saved = jobOfferRepository.save(jobOffer);
-        log.info("✅ Job offer saved with ID: {}", saved.getId());
-
-        // Rechargement avec EntityGraph
-        JobOffer loaded = jobOfferRepository.findById(saved.getId())
-                .orElseThrow(() -> new BusinessException(JobOfferError.JOB_OFFER_NOT_FOUND));
-
-        log.info("✅ Job offer reloaded. Workflow present: {}", loaded.getWorkflow() != null);
-        if (loaded.getWorkflow() != null) {
-            log.info("✅ Workflow details: {} (ID: {})",
-                    loaded.getWorkflow().getName(),
-                    loaded.getWorkflow().getWorkflowId());
-        }
-
-        JobOfferResponse response = jobOfferMapper.toDto(loaded);
-        log.info("✅ Mapped response. Workflow in response: {}", response.workflow() != null);
+        JobOfferResponse response = jobOfferMapper.toDto(saved);
 
         return response;
     }
 
     @Transactional(readOnly = true)
     public List<JobOfferResponse> getAllJobOffers() {
-        log.info("🔍 Getting all job offers...");
-
-        // D'abord, essayons la méthode simple
-        List<JobOffer> jobOffers = jobOfferRepository.findAll();
-        log.info("📊 Found {} job offers", jobOffers.size());
-
-        if (jobOffers.isEmpty()) {
-            throw new BusinessException(JobOfferError.JOB_OFFER_NOT_FOUND);
-        }
-
-        // Parcourons chaque offre pour débugger
-        for (int i = 0; i < jobOffers.size(); i++) {
-            JobOffer offer = jobOffers.get(i);
-            log.info("🔍 Job Offer {}: ID={}, Title={}", i+1, offer.getId(), offer.getTitle());
-
-            // Vérification du workflow
-            if (offer.getWorkflow() == null) {
-                log.warn("⚠️ Job Offer {} has NO workflow", offer.getId());
-            } else {
-                try {
-                    // Force le chargement lazy
-                    WorkflowEntity workflow = offer.getWorkflow();
-                    String workflowName = workflow.getName(); // Ceci va déclencher le chargement
-                    log.info("✅ Job Offer {} has workflow: {} (ID: {})",
-                            offer.getId(), workflowName, workflow.getWorkflowId());
-                } catch (Exception e) {
-                    log.error("❌ Error accessing workflow for job offer {}: {}", offer.getId(), e.getMessage());
-                }
-            }
-        }
-
-        // Mapping vers DTO
-        List<JobOfferResponse> responses = jobOffers.stream()
-                .map(jobOffer -> {
-                    JobOfferResponse response = jobOfferMapper.toDto(jobOffer);
-                    log.info("📤 Mapped job offer {}: workflow in response = {}",
-                            jobOffer.getId(), response.workflow() != null);
-                    return response;
-                })
-                .collect(Collectors.toList());
-
-        return responses;
+        return Optional.of(jobOfferRepository.findAll())
+                .filter(list -> !list.isEmpty())
+                .map(offers -> offers.stream()
+                        .map(jobOfferMapper::toDto)
+                        .toList())
+                .orElseThrow(() -> new BusinessException(JobOfferError.JOB_OFFER_NOT_FOUND));
     }
 
     @Transactional
@@ -147,7 +91,6 @@ public class JobOfferService {
             WorkflowEntity workflow = workflowRepository.findById(dto.workflowId())
                     .orElseThrow(() -> new BusinessException(WorkflowError.WORKFLOW_NOT_FOUND));
             jobOffer.setWorkflow(workflow);
-            log.info("✅ Workflow updated: {}", workflow.getName());
         }
 
         jobOfferRepository.save(jobOffer);
