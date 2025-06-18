@@ -1,5 +1,6 @@
 package com.courses.rhproject.modules.enterprises;
 
+import com.courses.rhproject.modules.jobOffer.dtos.JobOfferResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/enterprises")
@@ -42,5 +44,18 @@ public class EnterpriseController {
 
         EnterpriseResponse response = enterpriseService.createEnterprise(enterprise);
         return ResponseEntity.status(201).body(response);
+    }
+
+    @Operation(summary = "Get all job offers by enterprise", description = "Returns all job offers related to a specific enterprise")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Job offers found"),
+            @ApiResponse(responseCode = "404", description = "Enterprise not found or has no job offers"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/{enterpriseId}/job-offers")
+    public ResponseEntity<List<JobOfferResponse>> getAllJobOffersByEnterprise(
+            @PathVariable UUID enterpriseId) {
+        List<JobOfferResponse> offers = enterpriseService.getAllOffersByEnterprise(enterpriseId);
+        return ResponseEntity.ok(offers);
     }
 }

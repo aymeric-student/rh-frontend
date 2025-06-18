@@ -26,7 +26,7 @@ public class WorkflowService {
     }
 
     public List<WorkflowResponse> getAllWorkflows() {
-        return workflowRepository.findAll().stream()
+        return workflowRepository.findAllWorkflows().stream()
                 .map(workflowMapper::toDto)
                 .toList();
     }

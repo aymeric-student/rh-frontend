@@ -9,7 +9,8 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum EnterprisesErrors implements BaseError {
 
-    ENTERPRISES_NOT_FOUND("Enterprise not found", HttpStatus.NOT_FOUND);
+    ENTERPRISES_NOT_FOUND("Enterprise not found", HttpStatus.NOT_FOUND),
+    ENTERPRISE_HAS_NOT_JOB_OFFER("Enterprise hasn't job offer yet", HttpStatus.NOT_FOUND);
 
     private final String message;
     private final HttpStatus httpStatus;

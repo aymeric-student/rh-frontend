@@ -19,9 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -77,6 +75,7 @@ public class JobOfferService {
                 .map(jobOfferMapper::toDto)
                 .toList();
     }
+
     @Transactional
     public JobOfferResponse updateJobOffer(UUID id, CreateJobOfferRequest dto) {
         JobOffer jobOffer = jobOfferRepository.findById(id)

@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -33,6 +32,94 @@ public class JobOffer extends BaseEntity {
     private String location;
     private LocalDate publicationDate;
     private LocalDate expirationDate;
+
+    public ContractType getContractType() {
+        return contractType;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setSalary(BigDecimal salary) {
+        this.salary = salary;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setPublicationDate(LocalDate publicationDate) {
+        this.publicationDate = publicationDate;
+    }
+
+    public void setExpirationDate(LocalDate expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    public void setContractType(ContractType contractType) {
+        this.contractType = contractType;
+    }
+
+    public void setWorkflow(WorkflowEntity workflow) {
+        this.workflow = workflow;
+    }
+
+    public void setEnterprise(Enterprise enterprise) {
+        this.enterprise = enterprise;
+    }
+
+    public void setApplicantEntities(List<ApplicantEntity> applicantEntities) {
+        this.applicantEntities = applicantEntities;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public BigDecimal getSalary() {
+        return salary;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public LocalDate getPublicationDate() {
+        return publicationDate;
+    }
+
+    public LocalDate getExpirationDate() {
+        return expirationDate;
+    }
+
+    public WorkflowEntity getWorkflow() {
+        return workflow;
+    }
+
+    public Enterprise getEnterprise() {
+        return enterprise;
+    }
+
+    public List<ApplicantEntity> getApplicantEntities() {
+        return applicantEntities;
+    }
 
     @Enumerated(EnumType.STRING)
     private ContractType contractType;

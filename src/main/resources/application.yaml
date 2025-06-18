@@ -20,7 +20,10 @@ spring:
       hibernate.id.new_generator_mappings: false
 
 management:
+  server:
+    base-path: /api/v1  # pour coller avec ton routing d'API
   endpoints:
     web:
+      base-path: /actuator
       exposure:
-        include: health,info
+        include: "*"
