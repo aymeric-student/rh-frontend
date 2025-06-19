@@ -16,6 +16,26 @@ import java.util.UUID;
 @Table(name = "enterprise")
 public class Enterprise {
 
+
+    @Id
+    @GeneratedValue
+    @Column(name = "uuid", updatable = false, unique = true)
+    private UUID enterpriseId;
+
+    private String name;
+    private String description;
+    private String website;
+    private String phoneNumber;
+    private String siret;
+    private String industry;
+    private String headquartersLocation;
+    private Integer numberOfEmployees;
+    private Integer foundedYear;
+
+    @OneToMany(mappedBy = "enterprise", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = "enterprise-joboffers")
+    private List<JobOffer> jobOffers = new ArrayList<>();
+
     public UUID getEnterpriseId() {
         return enterpriseId;
     }
@@ -103,23 +123,4 @@ public class Enterprise {
     public void setJobOffers(List<JobOffer> jobOffers) {
         this.jobOffers = jobOffers;
     }
-
-    @Id
-    @GeneratedValue
-    @Column(name = "uuid", updatable = false, unique = true)
-    private UUID enterpriseId;
-
-    private String name;
-    private String description;
-    private String website;
-    private String phoneNumber;
-    private String siret;
-    private String industry;
-    private String headquartersLocation;
-    private Integer numberOfEmployees;
-    private Integer foundedYear;
-
-    @OneToMany(mappedBy = "enterprise", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference(value = "enterprise-joboffers")
-    private List<JobOffer> jobOffers = new ArrayList<>();
 }

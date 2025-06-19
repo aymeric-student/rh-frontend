@@ -18,7 +18,7 @@ public class AuthService {
             throw new BusinessException(UserError.USER_ALREADY_EXISTS);
         }
 
-        User user = User.builder()
+        UserEntity user = UserEntity.builder()
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
                 .firstName(request.firstName())
@@ -29,8 +29,8 @@ public class AuthService {
         userRepository.save(user);
     }
 
-    public User login(LoginRequest request) {
-        User user = userRepository.findByEmail(request.email())
+    public UserEntity login(LoginRequest request) {
+        UserEntity user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new BusinessException(UserError.USER_NOT_FOUND));
 
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
@@ -40,7 +40,7 @@ public class AuthService {
         return user;
     }
 
-    public User getUserByEmail(String email) {
+    public UserEntity getUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessException(UserError.USER_NOT_FOUND));
     }

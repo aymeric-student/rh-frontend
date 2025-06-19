@@ -1,6 +1,6 @@
 package com.courses.rhproject.modules.auth;
 
-import com.courses.rhproject.modules.users.User;
+import com.courses.rhproject.modules.users.UserEntity;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,8 +36,8 @@ public class AuthController {
             @ApiResponse(responseCode = "404", description = "User not found")
     })
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody LoginRequest request) {
-        User user = authService.login(request);
+    public ResponseEntity<UserEntity> login(@RequestBody LoginRequest request) {
+        UserEntity user = authService.login(request);
         return ResponseEntity.ok(user);
     }
 
@@ -47,9 +47,9 @@ public class AuthController {
             @ApiResponse(responseCode = "401", description = "Unauthorized - user not authenticated")
     })
     @GetMapping("/me")
-    public ResponseEntity<User> getMe(@AuthenticationPrincipal org.springframework.security.core.userdetails.User principal) {
+    public ResponseEntity<UserEntity> getMe(@AuthenticationPrincipal org.springframework.security.core.userdetails.User principal) {
         String email = principal.getUsername();
-        User user = authService.getUserByEmail(email);
+        UserEntity user = authService.getUserByEmail(email);
         return ResponseEntity.ok(user);
     }
 }

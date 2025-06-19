@@ -14,7 +14,30 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class UserEntity {
+
+    private String email;
+
+    private String password;
+
+    private String firstName;
+    private String lastName;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private RoleType role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference(value = "user-applicant")
+    private List<ApplicantEntity> applications = new ArrayList<>();
+
+    public boolean isRecruiter() {
+        return role == RoleType.RECRUITER;
+    }
+
+    public boolean isCandidate() {
+        return role == RoleType.CANDIDATE;
+    }
 
     @Id
     @GeneratedValue
@@ -58,28 +81,5 @@ public class User {
 
     public List<ApplicantEntity> getApplications() {
         return applications;
-    }
-
-    private String email;
-
-    private String password;
-
-    private String firstName;
-    private String lastName;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private RoleType role;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonManagedReference(value = "user-applicant")
-    private List<ApplicantEntity> applications = new ArrayList<>();
-
-    public boolean isRecruiter() {
-        return role == RoleType.RECRUITER;
-    }
-
-    public boolean isCandidate() {
-        return role == RoleType.CANDIDATE;
     }
 }

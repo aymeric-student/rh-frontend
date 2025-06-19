@@ -15,11 +15,9 @@ public class JacksonConfig {
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
 
-        // ✅ Configuration pour éviter les références circulaires
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
-        // ✅ Support des dates Java 8+
         mapper.registerModule(new JavaTimeModule());
 
         return mapper;

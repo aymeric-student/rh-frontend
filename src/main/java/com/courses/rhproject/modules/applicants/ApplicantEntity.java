@@ -2,7 +2,7 @@ package com.courses.rhproject.modules.applicants;
 
 import com.courses.rhproject.modules.jobOffer.JobOffer;
 import com.courses.rhproject.modules.stepResult.StepResultEntity;
-import com.courses.rhproject.modules.users.User;
+import com.courses.rhproject.modules.users.UserEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -31,7 +31,7 @@ public class ApplicantEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id")
     @JsonBackReference(value = "user-applicant")
-    private User user;
+    private UserEntity user;
 
     @OneToMany(mappedBy = "applicant", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<StepResultEntity> stepResults = new HashSet<>();
@@ -60,7 +60,7 @@ public class ApplicantEntity {
         this.applicationDate = applicationDate;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserEntity user) {
         this.user = user;
     }
 
@@ -85,7 +85,7 @@ public class ApplicantEntity {
         return applicationDate;
     }
 
-    public User getUser() {
+    public UserEntity getUser() {
         return user;
     }
 

@@ -5,6 +5,7 @@ import com.courses.rhproject.modules.applicants.ApplicantEntity;
 import com.courses.rhproject.modules.applicants.ApplicantRepository;
 import com.courses.rhproject.modules.step.StepEntity;
 import com.courses.rhproject.modules.step.StepRepository;
+import com.courses.rhproject.modules.step.StepStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

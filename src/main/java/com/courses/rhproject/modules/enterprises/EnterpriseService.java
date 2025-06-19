@@ -5,11 +5,9 @@ import com.courses.rhproject.modules.jobOffer.JobOffer;
 import com.courses.rhproject.modules.jobOffer.JobOfferMapper;
 import com.courses.rhproject.modules.jobOffer.dtos.JobOfferResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service

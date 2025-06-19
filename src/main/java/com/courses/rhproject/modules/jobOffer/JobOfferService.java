@@ -6,7 +6,7 @@ import com.courses.rhproject.modules.enterprises.EnterpriseRepository;
 import com.courses.rhproject.modules.enterprises.EnterprisesErrors;
 import com.courses.rhproject.modules.jobOffer.dtos.CreateJobOfferRequest;
 import com.courses.rhproject.modules.jobOffer.dtos.JobOfferResponse;
-import com.courses.rhproject.modules.users.User;
+import com.courses.rhproject.modules.users.UserEntity;
 import com.courses.rhproject.modules.users.UserError;
 import com.courses.rhproject.modules.users.UserRepository;
 import com.courses.rhproject.modules.workflows.WorkflowEntity;
@@ -34,7 +34,7 @@ public class JobOfferService {
 
     @Transactional
     public JobOfferResponse createJobOffer(CreateJobOfferRequest createJobOfferRequest, String userEmail) {
-        User recruiter = userRepository.findByEmail(userEmail)
+        UserEntity recruiter = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new BusinessException(UserError.USER_NOT_FOUND));
 
         if (!recruiter.isRecruiter()) {

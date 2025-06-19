@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,9 +33,8 @@ public class StepResultController {
             @RequestBody StepResultUpdateRequest dto
     ) {
         StepResultResponse response = stepResultService.createStepResult(applicantId, stepId, dto);
-        return ResponseEntity.status(201).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-
 
     @Operation(summary = "Update a step result", description = "Updates an existing step result for an applicant")
     @ApiResponses({
@@ -45,9 +45,9 @@ public class StepResultController {
     public ResponseEntity<Void> updateStepResult(
             @PathVariable UUID applicantId,
             @PathVariable UUID stepId,
-            @RequestBody StepResultUpdateRequest dto
+            @RequestBody StepResultUpdateRequest stepResultUpdateRequest
     ) {
-        stepResultService.updateStepResult(applicantId, stepId, dto);
+        stepResultService.updateStepResult(applicantId, stepId, stepResultUpdateRequest);
         return ResponseEntity.ok().build();
     }
 

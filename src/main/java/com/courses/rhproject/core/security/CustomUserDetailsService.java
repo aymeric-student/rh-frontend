@@ -1,11 +1,12 @@
 package com.courses.rhproject.core.security;
 
 import com.courses.rhproject.core.errors.BusinessException;
-import com.courses.rhproject.modules.users.User;
+import com.courses.rhproject.modules.users.UserEntity;
 import com.courses.rhproject.modules.users.UserError;
 import com.courses.rhproject.modules.users.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,10 +22,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(username)
+        UserEntity user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new BusinessException(UserError.USER_NOT_FOUND));
 
-        return new org.springframework.security.core.userdetails.User(
+        return new User(
                 user.getEmail(), user.getPassword(), List.of(new SimpleGrantedAuthority(user.getRole().name())));
     }
 }

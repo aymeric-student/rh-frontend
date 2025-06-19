@@ -4,7 +4,7 @@ import com.courses.rhproject.core.errors.BusinessException;
 import com.courses.rhproject.modules.jobOffer.JobOffer;
 import com.courses.rhproject.modules.jobOffer.JobOfferError;
 import com.courses.rhproject.modules.jobOffer.JobOfferRepository;
-import com.courses.rhproject.modules.users.User;
+import com.courses.rhproject.modules.users.UserEntity;
 import com.courses.rhproject.modules.users.UserError;
 import com.courses.rhproject.modules.users.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class ApplicantService {
     private final UserRepository userRepository;
 
     public ApplicantResponse createApplicant(CreateApplicant request, String userEmail) {
-        User user = userRepository.findByEmail(userEmail)
+        UserEntity user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new BusinessException(UserError.USER_NOT_FOUND));
 
         JobOffer offer = jobOfferRepository.findById(request.jobOfferId())
