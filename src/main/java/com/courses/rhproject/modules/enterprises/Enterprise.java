@@ -10,12 +10,99 @@ import java.util.List;
 import java.util.UUID;
 
 @Builder
-@Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "enterprise")
 public class Enterprise {
+
+    public UUID getEnterpriseId() {
+        return enterpriseId;
+    }
+
+    public void setEnterpriseId(UUID enterpriseId) {
+        this.enterpriseId = enterpriseId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getSiret() {
+        return siret;
+    }
+
+    public void setSiret(String siret) {
+        this.siret = siret;
+    }
+
+    public String getIndustry() {
+        return industry;
+    }
+
+    public void setIndustry(String industry) {
+        this.industry = industry;
+    }
+
+    public String getHeadquartersLocation() {
+        return headquartersLocation;
+    }
+
+    public void setHeadquartersLocation(String headquartersLocation) {
+        this.headquartersLocation = headquartersLocation;
+    }
+
+    public Integer getNumberOfEmployees() {
+        return numberOfEmployees;
+    }
+
+    public void setNumberOfEmployees(Integer numberOfEmployees) {
+        this.numberOfEmployees = numberOfEmployees;
+    }
+
+    public Integer getFoundedYear() {
+        return foundedYear;
+    }
+
+    public void setFoundedYear(Integer foundedYear) {
+        this.foundedYear = foundedYear;
+    }
+
+    public List<JobOffer> getJobOffers() {
+        return jobOffers;
+    }
+
+    public void setJobOffers(List<JobOffer> jobOffers) {
+        this.jobOffers = jobOffers;
+    }
 
     @Id
     @GeneratedValue

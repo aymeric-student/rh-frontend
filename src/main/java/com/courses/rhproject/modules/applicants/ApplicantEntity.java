@@ -1,26 +1,23 @@
 package com.courses.rhproject.modules.applicants;
 
 import com.courses.rhproject.modules.jobOffer.JobOffer;
+import com.courses.rhproject.modules.stepResult.StepResultEntity;
 import com.courses.rhproject.modules.users.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
 @Table(name = "applicants")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class ApplicantEntity {
-    @Id
-    @GeneratedValue
-    @Column(name = "uuid", updatable = false, unique = true)
-    private UUID applicantId;
-
     @Enumerated(EnumType.STRING)
     private ApplicantStatus status;
 
@@ -35,4 +32,62 @@ public class ApplicantEntity {
     @JoinColumn(name = "user_id")
     @JsonBackReference(value = "user-applicant")
     private User user;
+
+    @OneToMany(mappedBy = "applicant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<StepResultEntity> stepResults = new HashSet<>();
+
+    public Set<StepResultEntity> getStepResults() {
+        return stepResults;
+    }
+
+    public void setStepResults(Set<StepResultEntity> stepResults) {
+        this.stepResults = stepResults;
+    }
+
+    public void setApplicantId(UUID applicantId) {
+        this.applicantId = applicantId;
+    }
+
+    public void setStatus(ApplicantStatus status) {
+        this.status = status;
+    }
+
+    public void setJobOffer(JobOffer jobOffer) {
+        this.jobOffer = jobOffer;
+    }
+
+    public void setApplicationDate(LocalDate applicationDate) {
+        this.applicationDate = applicationDate;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @Id
+    @GeneratedValue
+    @Column(name = "uuid", updatable = false, unique = true)
+    private UUID applicantId;
+
+    public UUID getApplicantId() {
+        return applicantId;
+    }
+
+    public ApplicantStatus getStatus() {
+        return status;
+    }
+
+    public JobOffer getJobOffer() {
+        return jobOffer;
+    }
+
+    public LocalDate getApplicationDate() {
+        return applicationDate;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+
 }

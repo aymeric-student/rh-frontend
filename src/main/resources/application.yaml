@@ -21,7 +21,7 @@ spring:
 
 management:
   server:
-    base-path: /api/v1  # pour coller avec ton routing d'API
+    base-path: /api/v1
   endpoints:
     web:
       base-path: /actuator
