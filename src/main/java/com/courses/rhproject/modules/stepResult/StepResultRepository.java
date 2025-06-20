@@ -8,9 +8,9 @@ import java.util.UUID;
 
 public interface StepResultRepository extends JpaRepository<StepResultEntity, UUID> {
 
-    Optional<StepResultEntity> findByApplicant_ApplicantIdAndStep_StepId(UUID applicantId, UUID stepId);
+    Optional<StepResultEntity> findByApplicantIdAndStepId(UUID applicantId, UUID stepId);
 
-    boolean existsByApplicant_ApplicantIdAndStep_StepId(UUID applicantId, UUID stepId);
+    boolean existsByApplicantIdAndStepId(UUID applicantId, UUID stepId);
 
-    List<StepResultEntity> findAllByApplicant_ApplicantId(UUID applicantId);
+    List<StepResultEntity> findAllByApplicantId(UUID applicantId);
 }

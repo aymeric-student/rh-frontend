@@ -1,14 +1,13 @@
 package com.courses.rhproject.modules.stepResult;
 
 import com.courses.rhproject.core.errors.BusinessException;
-import com.courses.rhproject.modules.applicants.ApplicantEntity;
 import com.courses.rhproject.modules.applicants.ApplicantRepository;
 import com.courses.rhproject.modules.step.StepEntity;
 import com.courses.rhproject.modules.step.StepRepository;
-import com.courses.rhproject.modules.step.StepStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,39 +20,44 @@ public class StepResultService {
     private final StepRepository stepRepository;
     private final StepResultMapper stepResultMapper;
 
-    public StepResultResponse createStepResult(UUID applicantId, UUID stepId, StepResultUpdateRequest dto) {
-        boolean alreadyExists = stepResultRepository
-                .existsByApplicant_ApplicantIdAndStep_StepId(applicantId, stepId);
+    public StepResultResponse createStepResult(UUID applicantId, UUID stepId, StepResultUpdateRequest request) {
 
-        if (alreadyExists) {
+        if (stepResultRepository.existsByApplicantIdAndStepId(applicantId, stepId)) {
             throw new BusinessException(StepResultError.STEP_RESULT_ALREADY_EXISTS);
         }
 
-        ApplicantEntity applicant = applicantRepository.findById(applicantId)
-                .orElseThrow(() -> new BusinessException(StepResultError.APPLICANT_NOT_FOUND));
+        if (!applicantRepository.existsById(applicantId)) {
+            throw new BusinessException(StepResultError.APPLICANT_NOT_FOUND);
+        }
 
-        StepEntity step = stepRepository.findById(stepId)
-                .orElseThrow(() -> new BusinessException(StepResultError.STEP_NOT_FOUND));
+        // ✅ Validation simple avec existsById - pas de fetch inutile
+        if (!stepRepository.existsById(stepId)) {
+            throw new BusinessException(StepResultError.STEP_NOT_FOUND);
+        }
 
-        StepResultEntity newResult = stepResultMapper.toEntity(dto, applicant, step);
+        // ✅ Création ultra-simple en une ligne
+        StepResultEntity newResult = stepResultMapper.toEntity(request, applicantId, stepId);
+
         StepResultEntity saved = stepResultRepository.save(newResult);
-
         return stepResultMapper.toResponse(saved);
     }
 
-    public void updateStepResult(UUID applicantId, UUID stepId, StepResultUpdateRequest dto) {
+    public void updateStepResult(UUID applicantId, UUID stepId, StepResultUpdateRequest request) {
         StepResultEntity existingResult = stepResultRepository
-                .findByApplicant_ApplicantIdAndStep_StepId(applicantId, stepId)
+                .findByApplicantIdAndStepId(applicantId, stepId)
                 .orElseThrow(() -> new BusinessException(StepResultError.STEP_RESULT_NOT_FOUND));
 
-        stepResultMapper.updateStepResultFromDto(dto, existingResult);
+        existingResult.setStatus(request.status());
+        existingResult.setReviewer(request.reviewer());
+        existingResult.setComment(request.comment());
+        existingResult.setCompletedAt(LocalDateTime.now());
+
         stepResultRepository.save(existingResult);
     }
 
     public List<StepResultResponse> getAllByApplicant(UUID applicantId) {
-        return stepResultRepository.findAllByApplicant_ApplicantId(applicantId).stream()
+        return stepResultRepository.findAllByApplicantId(applicantId).stream()
                 .map(stepResultMapper::toResponse)
                 .toList();
     }
-
 }

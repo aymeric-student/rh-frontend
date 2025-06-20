@@ -30,9 +30,9 @@ public class StepResultController {
     public ResponseEntity<StepResultResponse> createStepResult(
             @PathVariable UUID applicantId,
             @PathVariable UUID stepId,
-            @RequestBody StepResultUpdateRequest dto
+            @RequestBody StepResultUpdateRequest stepResultUpdateRequest
     ) {
-        StepResultResponse response = stepResultService.createStepResult(applicantId, stepId, dto);
+        StepResultResponse response = stepResultService.createStepResult(applicantId, stepId, stepResultUpdateRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
