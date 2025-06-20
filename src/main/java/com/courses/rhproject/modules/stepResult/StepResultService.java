@@ -30,12 +30,10 @@ public class StepResultService {
             throw new BusinessException(StepResultError.APPLICANT_NOT_FOUND);
         }
 
-        // ✅ Validation simple avec existsById - pas de fetch inutile
         if (!stepRepository.existsById(stepId)) {
             throw new BusinessException(StepResultError.STEP_NOT_FOUND);
         }
 
-        // ✅ Création ultra-simple en une ligne
         StepResultEntity newResult = stepResultMapper.toEntity(request, applicantId, stepId);
 
         StepResultEntity saved = stepResultRepository.save(newResult);
